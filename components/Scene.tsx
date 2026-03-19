@@ -1,6 +1,7 @@
 import React from "react";
 import Ball from "./Ball";
 import Bat from "./Bat";
+import SwingTrail from "./SwingTrail";
 import CollisionDetector from "./CollisionDetector";
 
 export default function Scene() {

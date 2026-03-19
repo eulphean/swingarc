@@ -4,6 +4,7 @@ import { useBatStore } from "../stores/useBatStore";
 import { useGameRefs } from "../stores/useGameRefs";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
+import SwingTrail from "./SwingTrail";
 
 // Keyframe rotations
 const REST_ROTATION = [0.0, 0.3, 0.8];
@@ -109,11 +110,8 @@ export default function Bat() {
         <sphereGeometry args={[0.048, 16, 16]} />
         <meshStandardMaterial color="red" />
       </mesh>
-      {/* Barrel tip — tracking point for tip position */}
-      <mesh ref={batTipRef} position={[0, 1.3, 0]} visible={false}>
-        <sphereGeometry args={[0.01]} />
-        <meshBasicMaterial />
-      </mesh>
+      {/* Barrel tip — tracking point for tip position with trail effect */}
+      <SwingTrail position={[0, 1.3, 0]} visible={false} batTipRef={batTipRef} />
     </animated.group>
   );
 }
