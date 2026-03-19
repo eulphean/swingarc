@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
 import { useSpring, animated, config } from "@react-spring/three";
 import { useBatStore } from "../stores/useBatStore";
+import * as THREE from "three";
+import { Float } from "react-native/types_generated/Libraries/Types/CodegenTypes";
 
 // Keyframe rotations
 const REST_ROTATION = [0.0, 0.3, 0.8];
@@ -51,7 +53,10 @@ export default function Bat() {
   }, [isSwinging, api, completeSwing]);
 
   return (
-    <animated.group position={position} rotation={springs.rotation}>
+    <animated.group
+      position={position}
+      rotation={springs.rotation as any}
+    >
       {/* Pivot is at Knob [0,0,0], Bat Mesh is offset up */}
       <mesh position={[0, 0.5, 0]}>
         <cylinderGeometry args={[0.06, 0.03, 1, 16]} />
