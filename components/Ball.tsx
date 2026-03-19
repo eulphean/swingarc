@@ -1,15 +1,13 @@
 import React, { useEffect } from "react";
 import { useSpring, animated, config } from "@react-spring/three";
-
-interface BallProps {
-  isPitching: boolean;
-}
+import { usePitchStore } from "../stores/usePitchStore";
 
 const START_POSITION: [number, number, number] = [0, 1, -10];
 const END_POSITION: [number, number, number] = [0, 1, 3];
 const PITCH_DURATION = 1500; // 1.5 seconds
 
-export default function Ball({ isPitching }: BallProps) {
+export default function Ball() {
+  const isPitching = usePitchStore((state) => state.isPitching);
   const [springs, api] = useSpring(() => ({
     position: START_POSITION,
     config: config.default,

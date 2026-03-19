@@ -1,32 +1,21 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useRef, useEffect } from "react";
 import { StyleSheet, View, Pressable } from "react-native";
 import { Canvas } from "@react-three/fiber/native";
 import Scene from "./Scene";
 import PitchControl from "./PitchControl";
+import { useBatStore } from "../stores/useBatStore";
+import { usePitchStore } from "../stores/usePitchStore";
 
 export default function GameCanvas() {
-  const [isSwinging, setIsSwinging] = useState(false);
-  const [countdown, setCountdown] = useState<number | null>(null);
-  const [isPitching, setIsPitching] = useState(false);
   const countdownTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const batPosition: [number, number, number] = [0.55, 0.0, 3.2];
+  // Bat store
+  const swing = useBatStore((state) => state.swing);
 
-  const handleSwing = () => {
-    if (isSwinging) return;
-    setIsSwinging(true);
-  };
-
-  const handleSwingComplete = () => {
-    setIsSwinging(false);
-  };
-
-  const handlePitch = () => {
-    // Reset state
-    setCountdown(3);
-    setIsPitching(false);
-    setIsSwinging(false);
-  };
+  // Pitch store
+  const countdown = usePitchStore((state) => state.countdown);
+  const setCountdown = usePitchStore((state) => state.setCountdown);
+  const setIsPitching = usePitchStore((state) => state.setIsPitching);
 
   // Countdown timer effect
   useEffect(() => {
@@ -47,7 +36,7 @@ export default function GameCanvas() {
         clearTimeout(countdownTimerRef.current);
       }
     };
-  }, [countdown]);
+  }, [countdown, setCountdown, setIsPitching]);
 
   return (
     <View style={styles.container}>
@@ -58,23 +47,14 @@ export default function GameCanvas() {
         }}
         gl={{ antialias: false }}
       >
-        <Scene
-          isSwinging={isSwinging}
-          batPosition={batPosition}
-          isPitching={isPitching}
-          onSwingComplete={handleSwingComplete}
-        />
+        <Scene />
       </Canvas>
 
       {/* Tap area for swinging - covers area above pitch button */}
-      <Pressable style={styles.swingArea} onPress={handleSwing} />
+      <Pressable style={styles.swingArea} onPress={swing} />
 
       {/* Pitch Control (Button + Countdown) */}
-      <PitchControl
-        countdown={countdown}
-        isPitching={isPitching}
-        onPitch={handlePitch}
-      />
+      <PitchControl />
     </View>
   );
 }

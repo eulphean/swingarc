@@ -1,17 +1,11 @@
 import React from "react";
 import { StyleSheet, TouchableOpacity, Text, View } from "react-native";
+import { usePitchStore } from "../stores/usePitchStore";
 
-interface PitchControlProps {
-  countdown: number | null;
-  isPitching: boolean;
-  onPitch: () => void;
-}
-
-export default function PitchControl({
-  countdown,
-  isPitching,
-  onPitch,
-}: PitchControlProps) {
+export default function PitchControl() {
+  const countdown = usePitchStore((state) => state.countdown);
+  const isPitching = usePitchStore((state) => state.isPitching);
+  const startPitch = usePitchStore((state) => state.startPitch);
   // Show countdown if it's active
   if (countdown !== null) {
     return (
@@ -25,7 +19,7 @@ export default function PitchControl({
   return (
     <TouchableOpacity
       style={styles.pitchButton}
-      onPress={onPitch}
+      onPress={startPitch}
       disabled={isPitching}
     >
       <Text style={styles.pitchButtonText}>PITCH</Text>

@@ -2,19 +2,7 @@ import React from "react";
 import Ball from "./Ball";
 import Bat from "./Bat";
 
-interface SceneProps {
-  isSwinging: boolean;
-  batPosition: [number, number, number];
-  isPitching: boolean;
-  onSwingComplete: () => void;
-}
-
-export default function Scene({
-  isSwinging,
-  batPosition,
-  isPitching,
-  onSwingComplete,
-}: SceneProps) {
+export default function Scene() {
   return (
     <>
       {/* Ambient lighting - soft overall illumination */}
@@ -26,15 +14,11 @@ export default function Scene({
       {/* Grid helper for ground reference */}
       <gridHelper args={[20, 20, "#444444", "#222222"]} />
 
-      {/* Baseball - pitch when isPitching is true */}
-      <Ball isPitching={isPitching} />
+      {/* Baseball - uses pitch store internally */}
+      <Ball />
 
-      {/* Bat with keyframe animation */}
-      <Bat
-        isSwinging={isSwinging}
-        position={batPosition}
-        onSwingComplete={onSwingComplete}
-      />
+      {/* Bat - uses bat store internally */}
+      <Bat />
     </>
   );
 }

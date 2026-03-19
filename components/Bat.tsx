@@ -1,11 +1,6 @@
 import React, { useEffect } from "react";
 import { useSpring, animated, config } from "@react-spring/three";
-
-interface BatProps {
-  isSwinging: boolean;
-  position?: [number, number, number];
-  onSwingComplete?: () => void;
-}
+import { useBatStore } from "../stores/useBatStore";
 
 // Keyframe rotations
 const REST_ROTATION = [0.0, 0.3, 0.8];
@@ -13,11 +8,10 @@ const LOAD_ROTATION = [0.6, 0, 0.7];
 const SWING_ROTATION = [-1.5, 0, 0.9];
 const FOLLOW_ROTATION = [-0.3, 0, 0];
 
-export default function Bat({
-  isSwinging,
-  position = [0.55, 0.0, 3.2],
-  onSwingComplete,
-}: BatProps) {
+export default function Bat() {
+  const isSwinging = useBatStore((state) => state.isSwinging);
+  const position = useBatStore((state) => state.position);
+  const completeSwing = useBatStore((state) => state.completeSwing);
   const [springs, api] = useSpring(() => ({
     rotation: REST_ROTATION,
     config: config.default,
@@ -47,16 +41,14 @@ export default function Bat({
           await next({ rotation: REST_ROTATION, config: { duration: 1000 } });
 
           // Notify completion
-          if (onSwingComplete) {
-            onSwingComplete();
-          }
+          completeSwing();
         },
       });
     } else {
       // Reset to REST immediately when not swinging
       api.start({ rotation: REST_ROTATION, config: { duration: 0 } });
     }
-  }, [isSwinging, api, onSwingComplete]);
+  }, [isSwinging, api, completeSwing]);
 
   return (
     <animated.group position={position} rotation={springs.rotation}>
