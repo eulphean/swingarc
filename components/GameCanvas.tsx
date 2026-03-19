@@ -17,7 +17,7 @@ export default function GameCanvas() {
   // Pitch store
   const countdown = usePitchStore((state) => state.countdown);
   const setCountdown = usePitchStore((state) => state.setCountdown);
-  const setIsPitching = usePitchStore((state) => state.setIsPitching);
+  const setBallState = usePitchStore((state) => state.setBallState);
 
   // Countdown timer effect
   useEffect(() => {
@@ -30,7 +30,7 @@ export default function GameCanvas() {
     } else {
       // Countdown finished, start pitching
       setCountdown(null);
-      setIsPitching(true);
+      setBallState("PITCHING");
     }
 
     return () => {
@@ -38,7 +38,7 @@ export default function GameCanvas() {
         clearTimeout(countdownTimerRef.current);
       }
     };
-  }, [countdown, setCountdown, setIsPitching]);
+  }, [countdown, setCountdown, setBallState]);
 
   return (
     <View style={styles.container}>

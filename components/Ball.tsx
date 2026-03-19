@@ -1,13 +1,18 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useSpring, animated, config } from "@react-spring/three";
 import { usePitchStore } from "../stores/usePitchStore";
+import { useGameRefs } from "../stores/useGameRefs";
+import * as THREE from "three";
 
 const START_POSITION: [number, number, number] = [0, 1, -10];
 const END_POSITION: [number, number, number] = [
-  0, 0.04397094968421644, 2.5799471730269072,
+  0, 0.04397094968421644, 2.7799471730269072,
 ];
+const HIT_POSITION: [number, number, number] = [5, 3, -5]; // Flies away up and to the right
 
-const PITCH_DURATION = 2000; // 1.5 seconds
+const PITCH_DURATION = 2000;
+const HIT_DURATION = 1500;
+const MISS_RESET_DURATION = 500;
 
 const POSITION_MAP = {
   START: START_POSITION,
@@ -15,14 +20,25 @@ const POSITION_MAP = {
 };
 
 export default function Ball() {
-  const isPitching = usePitchStore((state) => state.isPitching);
-  const resetPitch = usePitchStore((state) => state.resetPitch);
+  const ballState = usePitchStore((state) => state.ballState);
+  const setBallState = usePitchStore((state) => state.setBallState);
   const debugPosition = usePitchStore((state) => state.debugPosition);
+  const setBallRef = useGameRefs((state) => state.setBallRef);
+
+  const ballRef = useRef<THREE.Mesh>(null);
 
   const [springs, api] = useSpring(() => ({
     position: START_POSITION,
     config: config.default,
   }));
+
+  // Store ref in global store for collision detection
+  useEffect(() => {
+    if (ballRef.current) {
+      setBallRef(ballRef.current);
+    }
+    return () => setBallRef(null);
+  }, [setBallRef]);
 
   useEffect(() => {
     // Debug mode - manually set position
@@ -32,28 +48,46 @@ export default function Ball() {
       return;
     }
 
-    // Normal pitch animation
-    if (isPitching) {
+    // State machine animations
+    if (ballState === "PITCHING") {
       // Pitch the ball from start to end position
       api.start({
         position: END_POSITION,
         config: { duration: PITCH_DURATION },
         onRest: () => {
-          // When pitch animation completes, reset pitch state
-          resetPitch();
+          // Ball passed without hit
+          setBallState("MISS");
         },
       });
-    } else {
-      // Reset to start position
+    } else if (ballState === "HIT") {
+      // Ball was hit - animate to fly-away position
+      api.start({
+        position: HIT_POSITION,
+        config: { duration: HIT_DURATION },
+        onRest: () => {
+          setBallState("IDLE");
+        },
+      });
+    } else if (ballState === "MISS") {
+      // Ball missed - reset to start
+      api.start({
+        position: START_POSITION,
+        config: { duration: MISS_RESET_DURATION },
+        onRest: () => {
+          setBallState("IDLE");
+        },
+      });
+    } else if (ballState === "IDLE") {
+      // Idle - stay at start position
       api.start({
         position: START_POSITION,
         config: { duration: 0 },
       });
     }
-  }, [isPitching, debugPosition, api, resetPitch]);
+  }, [ballState, debugPosition, api, setBallState]);
 
   return (
-    <animated.mesh position={springs.position}>
+    <animated.mesh ref={ballRef} position={springs.position}>
       <sphereGeometry args={[0.08, 16, 16]} />
       <meshStandardMaterial color="#ffffff" />
     </animated.mesh>

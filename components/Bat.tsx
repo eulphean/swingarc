@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { useSpring, animated, config } from "@react-spring/three";
 import { useBatStore } from "../stores/useBatStore";
+import { useGameRefs } from "../stores/useGameRefs";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
@@ -22,12 +23,31 @@ export default function Bat() {
   const position = useBatStore((state) => state.position);
   const completeSwing = useBatStore((state) => state.completeSwing);
   const debugRotation = useBatStore((state) => state.debugRotation);
+  const setBatTipRef = useGameRefs((state) => state.setBatTipRef);
+  const setBatBarrelRef = useGameRefs((state) => state.setBatBarrelRef);
   const batTipRef = useRef<THREE.Mesh>(null);
+  const batBarrelRef = useRef<THREE.Mesh>(null);
 
   const [springs, api] = useSpring(() => ({
     rotation: REST_ROTATION,
     config: config.default,
   }));
+
+  // Store bat tip ref in global store for position tracking
+  useEffect(() => {
+    if (batTipRef.current) {
+      setBatTipRef(batTipRef.current);
+    }
+    return () => setBatTipRef(null);
+  }, [setBatTipRef]);
+
+  // Store bat barrel ref in global store for collision detection
+  useEffect(() => {
+    if (batBarrelRef.current) {
+      setBatBarrelRef(batBarrelRef.current);
+    }
+    return () => setBatBarrelRef(null);
+  }, [setBatBarrelRef]);
 
   useFrame(() => {
     // Does the bat exist?
@@ -80,7 +100,7 @@ export default function Bat() {
   return (
     <animated.group position={position} rotation={springs.rotation as any}>
       {/* Pivot is at Knob [0,0,0], Bat Mesh is offset up */}
-      <mesh position={[0, 0.65, 0]}>
+      <mesh ref={batBarrelRef} position={[0, 0.65, 0]}>
         <cylinderGeometry args={[0.064, 0.032, 1.3, 16]} />
         <meshStandardMaterial color="red" roughness={0.3} />
       </mesh>
@@ -89,8 +109,8 @@ export default function Bat() {
         <sphereGeometry args={[0.048, 16, 16]} />
         <meshStandardMaterial color="red" />
       </mesh>
-      {/* Barrel tip — invisible, just for world position tracking */}
-      <mesh ref={batTipRef} position={[0, 1.3, 0]} visible={true}>
+      {/* Barrel tip — tracking point for tip position */}
+      <mesh ref={batTipRef} position={[0, 1.3, 0]} visible={false}>
         <sphereGeometry args={[0.01]} />
         <meshBasicMaterial />
       </mesh>

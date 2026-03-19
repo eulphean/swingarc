@@ -1,6 +1,7 @@
 import React from "react";
 import Ball from "./Ball";
 import Bat from "./Bat";
+import CollisionDetector from "./CollisionDetector";
 
 export default function Scene() {
   return (
@@ -19,6 +20,9 @@ export default function Scene() {
 
       {/* Bat - uses bat store internally */}
       <Bat />
+
+      {/* Collision detection - checks bat tip distance to ball */}
+      <CollisionDetector />
     </>
   );
 }
