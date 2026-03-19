@@ -9,8 +9,8 @@ interface BatProps {
 
 // Keyframe rotations
 const REST_ROTATION = [0.0, 0.3, 0.8];
-const LOAD_ROTATION = [0.5, 0, 0.7];
-const SWING_ROTATION = [-0.9, 0, 0.7];
+const LOAD_ROTATION = [0.6, 0, 0.7];
+const SWING_ROTATION = [-1.5, 0, 0.9];
 const FOLLOW_ROTATION = [-0.3, 0, 0];
 
 export default function Bat({
@@ -31,12 +31,12 @@ export default function Bat({
           // LOAD (10ms)
           await next({
             rotation: LOAD_ROTATION,
-            config: { duration: 20, easing: (t) => Math.pow(t, 2) },
+            config: { duration: 500, easing: (t) => Math.pow(t, 4) },
           });
           // SWING (50ms, explosive)
           await next({
             rotation: SWING_ROTATION,
-            config: { duration: 20, easing: (t) => Math.pow(t, 1) },
+            config: { duration: 10, easing: (t) => Math.pow(t, 2) },
           });
           // FOLLOW (500ms, smooth deceleration)
           await next({
