@@ -22,12 +22,12 @@ export default function Bat() {
       // Animate through keyframes: REST -> LOAD -> SWING -> FOLLOW -> REST
       api.start({
         to: async (next) => {
-          // LOAD (10ms)
+          // LOAD (250ms)
           await next({
             rotation: LOAD_ROTATION,
-            config: { duration: 500, easing: (t) => Math.pow(t, 4) },
+            config: { duration: 250, easing: (t) => Math.pow(t, 4) },
           });
-          // SWING (50ms, explosive)
+          // SWING (10ms, explosive)
           await next({
             rotation: SWING_ROTATION,
             config: { duration: 10, easing: (t) => Math.pow(t, 2) },
