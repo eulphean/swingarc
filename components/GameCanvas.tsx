@@ -1,8 +1,8 @@
-import React, { useRef } from "react";
+import React from "react";
 import { StyleSheet, View } from "react-native";
-import { Canvas, useFrame } from "@react-three/fiber/native";
-import { Mesh } from "three";
-import RotatingCube from "./RotatingCube";
+import { Canvas } from "@react-three/fiber/native";
+import Ball from "./Ball";
+import Bat from "./Bat";
 
 export default function GameCanvas() {
   return (
@@ -32,8 +32,15 @@ function Scene() {
       {/* Grid helper for ground reference */}
       <gridHelper args={[20, 20, "#444444", "#222222"]} />
 
-      {/* Rotating cube at origin */}
-      <RotatingCube />
+      {/* Baseball at starting position */}
+      <Ball position={[0, 0, -10]} />
+
+      {/* Bat in lower-right position */}
+      <Bat
+        position={[0.9, -0.2, 3]}
+        rotation={[0, 0, Math.PI / 4]}
+        scale={[1.75, 1.75, 1.75]}
+      />
     </>
   );
 }
