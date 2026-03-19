@@ -4,6 +4,7 @@ import { Canvas } from "@react-three/fiber/native";
 import Scene from "./Scene";
 import PitchControl from "./PitchControl";
 import BatDebug from "./BatDebug";
+import BallDebug from "./BallDebug";
 import { useBatStore } from "../stores/useBatStore";
 import { usePitchStore } from "../stores/usePitchStore";
 
@@ -59,6 +60,9 @@ export default function GameCanvas() {
 
       {/* Bat Debug Control */}
       <BatDebug />
+
+      {/* Ball Debug Control */}
+      <BallDebug />
     </View>
   );
 }

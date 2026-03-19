@@ -8,9 +8,15 @@ const END_POSITION: [number, number, number] = [
 ];
 const PITCH_DURATION = 2000; // 1.5 seconds
 
+const POSITION_MAP = {
+  START: START_POSITION,
+  END: END_POSITION,
+};
+
 export default function Ball() {
   const isPitching = usePitchStore((state) => state.isPitching);
   const resetPitch = usePitchStore((state) => state.resetPitch);
+  const debugPosition = usePitchStore((state) => state.debugPosition);
 
   const [springs, api] = useSpring(() => ({
     position: START_POSITION,
@@ -18,6 +24,14 @@ export default function Ball() {
   }));
 
   useEffect(() => {
+    // Debug mode - manually set position
+    if (debugPosition) {
+      const targetPosition = POSITION_MAP[debugPosition];
+      api.start({ position: targetPosition, config: { duration: 300 } });
+      return;
+    }
+
+    // Normal pitch animation
     if (isPitching) {
       // Pitch the ball from start to end position
       api.start({
@@ -35,7 +49,7 @@ export default function Ball() {
         config: { duration: 0 },
       });
     }
-  }, [isPitching, api, resetPitch]);
+  }, [isPitching, debugPosition, api, resetPitch]);
 
   return (
     <animated.mesh position={springs.position}>
