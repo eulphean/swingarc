@@ -8,11 +8,34 @@ const START_POSITION: [number, number, number] = [0, 1, -10];
 const END_POSITION: [number, number, number] = [
   0, 0.04397094968421644, 5.7799471730269072,
 ];
-const HIT_POSITION: [number, number, number] = [5, 3, -5]; // Flies away up and to the right
 
 const PITCH_DURATION = 2000;
 const HIT_DURATION = 1000;
 const MISS_RESET_DURATION = 0;
+
+/**
+ * Calculate the ball's destination after being hit
+ * Direction: towards stadium (-z), right (+x for right-handed batter), upward (+y)
+ * Adds variation to x and y for more dynamic trajectories
+ */
+function calculateHitDestination(
+  contactPoint: [number, number, number],
+): [number, number, number] {
+  const [cx, cy, cz] = contactPoint;
+
+  // Add random variation to x and y
+  const xVariation = (Math.random() - 0.5) * 4; // ±2 variation in x
+  const yVariation = (Math.random() - 0.5) * 3; // ±1.5 variation in y
+
+  // Direction vector: rightward, upward, towards stadium
+  const direction = {
+    x: 8 + xVariation, // Strong rightward (right-handed batter) with variation
+    y: 5 + yVariation, // Upward arc with variation
+    z: -40, // Deep into stadium (negative z)
+  };
+
+  return [cx + direction.x, cy + direction.y, cz + direction.z];
+}
 
 const POSITION_MAP = {
   START: START_POSITION,
@@ -23,6 +46,7 @@ export default function Ball() {
   const ballState = usePitchStore((state) => state.ballState);
   const setBallState = usePitchStore((state) => state.setBallState);
   const debugPosition = usePitchStore((state) => state.debugPosition);
+  const hitPoint = usePitchStore((state) => state.hitPoint);
   const setBallRef = useGameRefs((state) => state.setBallRef);
 
   const ballRef = useRef<THREE.Mesh>(null);
@@ -60,14 +84,21 @@ export default function Ball() {
         },
       });
     } else if (ballState === "HIT") {
-      // Ball was hit - animate to fly-away position
-      api.start({
-        position: HIT_POSITION,
-        config: { duration: HIT_DURATION },
-        onRest: () => {
-          setBallState("IDLE");
-        },
-      });
+      // Ball was hit - calculate destination based on contact point
+      if (hitPoint) {
+        const destination = calculateHitDestination(hitPoint);
+        api.start({
+          position: destination,
+          config: { duration: HIT_DURATION },
+          onRest: () => {
+            setBallState("IDLE");
+          },
+        });
+      } else {
+        // Fallback if hitPoint is somehow not set
+        console.warn("HIT state but no hitPoint available");
+        setBallState("IDLE");
+      }
     } else if (ballState === "MISS") {
       // Ball missed - reset to start
       api.start({
@@ -84,7 +115,7 @@ export default function Ball() {
         config: { duration: 0 },
       });
     }
-  }, [ballState, debugPosition, api, setBallState]);
+  }, [ballState, debugPosition, hitPoint, api, setBallState]);
 
   return (
     <animated.mesh ref={ballRef} position={springs.position}>

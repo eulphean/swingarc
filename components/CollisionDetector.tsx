@@ -22,6 +22,7 @@ export default function CollisionDetector() {
   const isSwinging = useBatStore((state) => state.isSwinging);
   const ballState = usePitchStore((state) => state.ballState);
   const setBallState = usePitchStore((state) => state.setBallState);
+  const setHitPoint = usePitchStore((state) => state.setHitPoint);
 
   const hasContactOccurred = useRef(false);
 
@@ -62,6 +63,14 @@ export default function CollisionDetector() {
     // Check for intersection between ball sphere and bat bounding box
     if (batBox.intersectsSphere(ballSphere)) {
       hasContactOccurred.current = true;
+
+      // Store the contact point (ball's center at collision)
+      const contactPoint: [number, number, number] = [
+        ballSphere.center.x,
+        ballSphere.center.y,
+        ballSphere.center.z,
+      ];
+      setHitPoint(contactPoint);
       setBallState("HIT");
 
       // Log for debugging
