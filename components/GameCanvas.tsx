@@ -3,6 +3,7 @@ import { StyleSheet, View, Pressable } from "react-native";
 import { Canvas } from "@react-three/fiber/native";
 import Scene from "./Scene";
 import PitchControl from "./PitchControl";
+import BatDebug from "./BatDebug";
 import { useBatStore } from "../stores/useBatStore";
 import { usePitchStore } from "../stores/usePitchStore";
 
@@ -55,6 +56,9 @@ export default function GameCanvas() {
 
       {/* Pitch Control (Button + Countdown) */}
       <PitchControl />
+
+      {/* Bat Debug Control */}
+      <BatDebug />
     </View>
   );
 }

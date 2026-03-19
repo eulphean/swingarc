@@ -3,8 +3,10 @@ import { useSpring, animated, config } from "@react-spring/three";
 import { usePitchStore } from "../stores/usePitchStore";
 
 const START_POSITION: [number, number, number] = [0, 1, -10];
-const END_POSITION: [number, number, number] = [0, 1, 3];
-const PITCH_DURATION = 1500; // 1.5 seconds
+const END_POSITION: [number, number, number] = [
+  -0.035052390203611505, 0.4, 3.2987392907234425,
+];
+const PITCH_DURATION = 2000; // 1.5 seconds
 
 export default function Ball() {
   const isPitching = usePitchStore((state) => state.isPitching);
