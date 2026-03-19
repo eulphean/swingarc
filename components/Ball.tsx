@@ -6,13 +6,13 @@ import * as THREE from "three";
 
 const START_POSITION: [number, number, number] = [0, 1, -10];
 const END_POSITION: [number, number, number] = [
-  0, 0.04397094968421644, 2.7799471730269072,
+  0, 0.04397094968421644, 5.7799471730269072,
 ];
 const HIT_POSITION: [number, number, number] = [5, 3, -5]; // Flies away up and to the right
 
 const PITCH_DURATION = 2000;
-const HIT_DURATION = 1500;
-const MISS_RESET_DURATION = 500;
+const HIT_DURATION = 1000;
+const MISS_RESET_DURATION = 0;
 
 const POSITION_MAP = {
   START: START_POSITION,
