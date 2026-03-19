@@ -8,6 +8,8 @@ const PITCH_DURATION = 1500; // 1.5 seconds
 
 export default function Ball() {
   const isPitching = usePitchStore((state) => state.isPitching);
+  const resetPitch = usePitchStore((state) => state.resetPitch);
+
   const [springs, api] = useSpring(() => ({
     position: START_POSITION,
     config: config.default,
@@ -19,6 +21,10 @@ export default function Ball() {
       api.start({
         position: END_POSITION,
         config: { duration: PITCH_DURATION },
+        onRest: () => {
+          // When pitch animation completes, reset pitch state
+          resetPitch();
+        },
       });
     } else {
       // Reset to start position
@@ -27,7 +33,7 @@ export default function Ball() {
         config: { duration: 0 },
       });
     }
-  }, [isPitching, api]);
+  }, [isPitching, api, resetPitch]);
 
   return (
     <animated.mesh position={springs.position}>
