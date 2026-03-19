@@ -1,26 +1,56 @@
-import React from "react";
-import { StyleSheet, View } from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, View, TouchableOpacity, Text } from "react-native";
 import { Canvas } from "@react-three/fiber/native";
 import Ball from "./Ball";
 import Bat from "./Bat";
 
 export default function GameCanvas() {
+  const [isSwinging, setIsSwinging] = useState(false);
+
+  const batPosition: [number, number, number] = [0.55, 0.0, 3.2];
+
+  const handleSwing = () => {
+    if (isSwinging) return;
+    setIsSwinging(true);
+  };
+
+  const handleSwingComplete = () => {
+    setIsSwinging(false);
+  };
+
   return (
     <View style={styles.container}>
       <Canvas
         camera={{
-          position: [0, 2, 5],
-          fov: 50,
+          position: [0, 1, 4],
+          fov: 90,
         }}
         gl={{ antialias: false }}
       >
-        <Scene />
+        <Scene isSwinging={isSwinging} batPosition={batPosition} onSwingComplete={handleSwingComplete} />
       </Canvas>
+
+      {/* Swing Button */}
+      <TouchableOpacity
+        style={styles.swingButton}
+        onPress={handleSwing}
+        disabled={isSwinging}
+      >
+        <Text style={styles.swingButtonText}>
+          {isSwinging ? "SWINGING..." : "SWING"}
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 }
 
-function Scene() {
+interface SceneProps {
+  isSwinging: boolean;
+  batPosition: [number, number, number];
+  onSwingComplete: () => void;
+}
+
+function Scene({ isSwinging, batPosition, onSwingComplete }: SceneProps) {
   return (
     <>
       {/* Ambient lighting - soft overall illumination */}
@@ -35,12 +65,8 @@ function Scene() {
       {/* Baseball at starting position */}
       <Ball position={[0, 0, -10]} />
 
-      {/* Bat in lower-right position */}
-      <Bat
-        position={[0.9, -0.2, 3]}
-        rotation={[0, 0, Math.PI / 4]}
-        scale={[1.75, 1.75, 1.75]}
-      />
+      {/* Bat with keyframe animation */}
+      <Bat isSwinging={isSwinging} position={batPosition} onSwingComplete={onSwingComplete} />
     </>
   );
 }
@@ -49,5 +75,22 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#0a0a0a",
+  },
+  swingButton: {
+    position: "absolute",
+    bottom: 60,
+    alignSelf: "center",
+    backgroundColor: "rgba(255, 100, 100, 0.2)",
+    paddingHorizontal: 50,
+    paddingVertical: 20,
+    borderRadius: 40,
+    borderWidth: 3,
+    borderColor: "rgba(255, 100, 100, 0.5)",
+  },
+  swingButtonText: {
+    color: "#ffffff",
+    fontSize: 22,
+    fontWeight: "bold",
+    letterSpacing: 2,
   },
 });
