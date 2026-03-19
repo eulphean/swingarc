@@ -1,8 +1,8 @@
 import React from "react";
 import Ball from "./Ball";
 import Bat from "./Bat";
-import SwingTrail from "./SwingTrail";
 import CollisionDetector from "./CollisionDetector";
+import ContactParticles from "./ContactParticles";
 
 export default function Scene() {
   return (
@@ -24,6 +24,9 @@ export default function Scene() {
 
       {/* Collision detection - checks bat tip distance to ball */}
       <CollisionDetector />
+
+      {/* Contact particles - burst effect at hit point */}
+      <ContactParticles />
     </>
   );
 }
