@@ -28,6 +28,7 @@ export default function Bat() {
   const setBatBarrelRef = useGameRefs((state) => state.setBatBarrelRef);
   const batTipRef = useRef<THREE.Mesh>(null);
   const batBarrelRef = useRef<THREE.Mesh>(null);
+  const groupRef = useRef<THREE.Group>(null);
 
   const [springs, api] = useSpring(() => ({
     rotation: REST_ROTATION,
@@ -93,8 +94,27 @@ export default function Bat() {
         },
       });
     } else {
-      // Reset to REST immediately when not swinging
-      api.start({ rotation: REST_ROTATION, config: { duration: 0 } });
+      // REST state - add subtle wobble to show readiness
+      api.start({
+        from: { rotation: REST_ROTATION },
+        to: {
+          rotation: [
+            REST_ROTATION[0] + 0.05,
+            REST_ROTATION[1] + 0.02,
+            REST_ROTATION[2] + 0.02,
+          ],
+        },
+        loop: { reverse: true },
+        config: {
+          duration: 1500,
+          easing: (t) => {
+            // Smooth ease-in-out for seamless reversing
+            return t < 0.5
+              ? 2 * t * t
+              : 1 - Math.pow(-2 * t + 2, 2) / 2;
+          }
+        },
+      });
     }
   }, [isSwinging, debugRotation, api, completeSwing]);
 
@@ -111,7 +131,11 @@ export default function Bat() {
         <meshStandardMaterial color="red" />
       </mesh>
       {/* Barrel tip — tracking point for tip position with trail effect */}
-      <SwingTrail position={[0, 1.3, 0]} visible={false} batTipRef={batTipRef} />
+      <SwingTrail
+        position={[0, 1.3, 0]}
+        visible={false}
+        batTipRef={batTipRef}
+      />
     </animated.group>
   );
 }
