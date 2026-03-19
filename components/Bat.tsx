@@ -32,7 +32,7 @@ export default function Bat() {
   useFrame(() => {
     // Does the bat exist?
     if (batTipRef.current) {
-      //console.log(batTipRef.current.getWorldPosition(new THREE.Vector3()));
+      // console.log(batTipRef.current.getWorldPosition(new THREE.Vector3()));
     }
   });
 
@@ -80,17 +80,17 @@ export default function Bat() {
   return (
     <animated.group position={position} rotation={springs.rotation as any}>
       {/* Pivot is at Knob [0,0,0], Bat Mesh is offset up */}
-      <mesh position={[0, 0.5, 0]}>
-        <cylinderGeometry args={[0.06, 0.03, 1, 16]} />
+      <mesh position={[0, 0.65, 0]}>
+        <cylinderGeometry args={[0.064, 0.032, 1.3, 16]} />
         <meshStandardMaterial color="red" roughness={0.3} />
       </mesh>
       {/* Visual Knob at the Pivot Point */}
       <mesh position={[0, 0, 0]}>
-        <sphereGeometry args={[0.05, 16, 16]} />
+        <sphereGeometry args={[0.048, 16, 16]} />
         <meshStandardMaterial color="red" />
       </mesh>
       {/* Barrel tip — invisible, just for world position tracking */}
-      <mesh ref={batTipRef} position={[0, 1, 0]} visible={true}>
+      <mesh ref={batTipRef} position={[0, 1.3, 0]} visible={true}>
         <sphereGeometry args={[0.01]} />
         <meshBasicMaterial />
       </mesh>

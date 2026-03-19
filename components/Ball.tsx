@@ -4,8 +4,9 @@ import { usePitchStore } from "../stores/usePitchStore";
 
 const START_POSITION: [number, number, number] = [0, 1, -10];
 const END_POSITION: [number, number, number] = [
-  -0.035052390203611505, 0.4, 3.2987392907234425,
+  0, 0.04397094968421644, 2.5799471730269072,
 ];
+
 const PITCH_DURATION = 2000; // 1.5 seconds
 
 const POSITION_MAP = {
@@ -53,7 +54,7 @@ export default function Ball() {
 
   return (
     <animated.mesh position={springs.position}>
-      <sphereGeometry args={[0.15, 16, 16]} />
+      <sphereGeometry args={[0.08, 16, 16]} />
       <meshStandardMaterial color="#ffffff" />
     </animated.mesh>
   );
