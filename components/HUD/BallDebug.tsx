@@ -28,16 +28,16 @@ export default function BallDebug() {
 
 const styles = StyleSheet.create({
   debugButton: {
-    position: "absolute",
-    top: spacing[20],
-    right: spacing[4],
     ...components.debugButton,
     borderColor: colors.primary,
-    borderWidth: 2,
-    zIndex: 10,
+    borderWidth: 1,
+    paddingHorizontal: spacing[2],
+    paddingVertical: spacing[1],
+    minWidth: 80,
   },
   debugButtonText: {
     ...typography.labelSm,
     color: colors.textPrimary,
+    fontSize: 10,
   },
 });

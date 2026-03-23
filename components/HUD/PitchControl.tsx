@@ -1,7 +1,13 @@
 import React, { useRef, useEffect } from "react";
 import { StyleSheet, TouchableOpacity, Text, View } from "react-native";
 import { usePitchStore } from "../../stores/usePitchStore";
-import { colors, spacing, typography, components, effects } from "../../constants/designTokens";
+import {
+  colors,
+  spacing,
+  typography,
+  components,
+  effects,
+} from "../../constants/designTokens";
 
 export default function PitchControl() {
   const countdownTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -43,44 +49,60 @@ export default function PitchControl() {
 
   // Show pitch button when not counting down or pitching
   return (
-    <TouchableOpacity
-      style={styles.pitchButton}
-      onPress={startPitch}
-      disabled={isPitching}
-    >
-      <Text style={styles.pitchButtonText}>PITCH</Text>
-    </TouchableOpacity>
+    <View style={styles.pitchButtonContainer}>
+      <TouchableOpacity
+        style={styles.pitchButton}
+        onPress={startPitch}
+        disabled={isPitching}
+      >
+        <Text style={styles.pitchButtonText}>PITCH</Text>
+      </TouchableOpacity>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   countdownContainer: {
     position: "absolute",
-    bottom: 60,
-    alignSelf: "center",
-    ...effects.glass,
-    width: 120,
-    height: 120,
-    borderRadius: 60,
+    top: "35%",
+    left: 0,
+    right: 0,
     alignItems: "center",
     justifyContent: "center",
-    borderWidth: 2,
-    borderColor: colors.outlineVariant,
     zIndex: 10,
   },
   countdownText: {
-    ...typography.displayLg,
-    color: colors.textPrimary,
+    fontSize: 120,
+    fontWeight: "900",
+    color: colors.textSecondary,
+    opacity: 0.6,
+  },
+  pitchButtonContainer: {
+    position: "absolute",
+    bottom: spacing[6],
+    left: spacing[4],
+    right: spacing[4],
+    alignItems: "center",
+    zIndex: 10,
   },
   pitchButton: {
-    position: "absolute",
-    bottom: 60,
-    alignSelf: "center",
-    ...components.primaryButton,
-    zIndex: 10,
+    width: "50%",
+    maxWidth: 250,
+    backgroundColor: colors.surfaceContainerLow,
+    borderWidth: 3,
+    borderColor: colors.primary,
+    borderRadius: 12,
+    paddingVertical: spacing[4],
+    paddingHorizontal: spacing[4],
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: spacing[2],
   },
   pitchButtonText: {
     ...typography.labelLg,
-    color: colors.textPrimary,
+    fontSize: 20,
+    fontWeight: "700",
+    color: colors.primary,
+    textAlign: "center",
   },
 });
