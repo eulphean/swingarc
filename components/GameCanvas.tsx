@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import { StyleSheet, View, Pressable } from "react-native";
 import { Canvas } from "@react-three/fiber/native";
+import { Environment } from "@react-three/drei/native";
 import Scene from "./Scene";
 import PitchControl from "./PitchControl";
 import BatDebug from "./BatDebug";
@@ -49,6 +50,7 @@ export default function GameCanvas() {
         }}
         gl={{ antialias: false }}
       >
+        <Environment preset="park" background blur={0.2} />
         <Scene />
       </Canvas>
 

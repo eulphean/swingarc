@@ -14,10 +14,10 @@ export default function Scene() {
       <directionalLight position={[5, 10, 5]} intensity={1.5} color="#ffffff" />
 
       {/* Grid helper for ground reference */}
-      <gridHelper args={[20, 20, "#444444", "#222222"]} />
+      <gridHelper args={[20, 20, "#444444", "#222222"]} visible={false} />
 
       {/* Baseball - uses pitch store internally */}
-      <Ball />
+      <Ball scale={2} />
 
       {/* Bat - uses bat store internally */}
       <Bat />

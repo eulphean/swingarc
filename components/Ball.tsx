@@ -4,14 +4,26 @@ import { usePitchStore } from "../stores/usePitchStore";
 import { useGameRefs } from "../stores/useGameRefs";
 import * as THREE from "three";
 
-const START_POSITION: [number, number, number] = [0, 1, -10];
-const END_POSITION: [number, number, number] = [
-  0, 0.04397094968421644, 5.7799471730269072,
+const START_POSITION: [number, number, number] = [0, 1, -8];
+const BASE_END_POSITION: [number, number, number] = [
+  0, -0.5, 5.7799471730269072,
 ];
 
-const PITCH_DURATION = 2000;
-const HIT_DURATION = 1000;
+const PITCH_DURATION = 800;
+const HIT_DURATION = 1500;
 const MISS_RESET_DURATION = 0;
+
+/**
+ * Generate a random end position with x variation between -0.1 and 0.1
+ */
+function generateRandomEndPosition(): [number, number, number] {
+  const xVariation = (Math.random() - 0.5) * 0.5; // Range: -0.1 to 0.1
+  return [
+    BASE_END_POSITION[0] + xVariation,
+    BASE_END_POSITION[1] + xVariation,
+    BASE_END_POSITION[2],
+  ];
+}
 
 /**
  * Calculate the ball's destination after being hit
@@ -39,10 +51,14 @@ function calculateHitDestination(
 
 const POSITION_MAP = {
   START: START_POSITION,
-  END: END_POSITION,
+  END: BASE_END_POSITION,
 };
 
-export default function Ball() {
+interface BallProps {
+  scale?: number;
+}
+
+export default function Ball({ scale = 1 }: BallProps) {
   const ballState = usePitchStore((state) => state.ballState);
   const setBallState = usePitchStore((state) => state.setBallState);
   const debugPosition = usePitchStore((state) => state.debugPosition);
@@ -50,6 +66,8 @@ export default function Ball() {
   const setBallRef = useGameRefs((state) => state.setBallRef);
 
   const ballRef = useRef<THREE.Mesh>(null);
+  const currentEndPositionRef =
+    useRef<[number, number, number]>(BASE_END_POSITION);
 
   const [springs, api] = useSpring(() => ({
     position: START_POSITION,
@@ -74,9 +92,12 @@ export default function Ball() {
 
     // State machine animations
     if (ballState === "PITCHING") {
+      // Generate a new random end position for this pitch
+      currentEndPositionRef.current = generateRandomEndPosition();
+
       // Pitch the ball from start to end position
       api.start({
-        position: END_POSITION,
+        position: currentEndPositionRef.current,
         config: { duration: PITCH_DURATION },
         onRest: () => {
           // Ball passed without hit
@@ -118,7 +139,7 @@ export default function Ball() {
   }, [ballState, debugPosition, hitPoint, api, setBallState]);
 
   return (
-    <animated.mesh ref={ballRef} position={springs.position}>
+    <animated.mesh ref={ballRef} position={springs.position} scale={scale}>
       <sphereGeometry args={[0.08, 16, 16]} />
       <meshStandardMaterial color="#ffffff" />
     </animated.mesh>
