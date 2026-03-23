@@ -1,12 +1,37 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import { StyleSheet, TouchableOpacity, Text, View } from "react-native";
-import { usePitchStore } from "../stores/usePitchStore";
-import { colors, spacing, typography, components, effects } from "../constants/designTokens";
+import { usePitchStore } from "../../stores/usePitchStore";
+import { colors, spacing, typography, components, effects } from "../../constants/designTokens";
 
 export default function PitchControl() {
+  const countdownTimerRef = useRef<NodeJS.Timeout | null>(null);
+
   const countdown = usePitchStore((state) => state.countdown);
+  const setCountdown = usePitchStore((state) => state.setCountdown);
+  const setBallState = usePitchStore((state) => state.setBallState);
   const isPitching = usePitchStore((state) => state.isPitching);
   const startPitch = usePitchStore((state) => state.startPitch);
+
+  // Countdown timer effect
+  useEffect(() => {
+    if (countdown === null) return;
+
+    if (countdown > 0) {
+      countdownTimerRef.current = setTimeout(() => {
+        setCountdown(countdown - 1);
+      }, 1000);
+    } else {
+      // Countdown finished, start pitching
+      setCountdown(null);
+      setBallState("PITCHING");
+    }
+
+    return () => {
+      if (countdownTimerRef.current) {
+        clearTimeout(countdownTimerRef.current);
+      }
+    };
+  }, [countdown, setCountdown, setBallState]);
   // Show countdown if it's active
   if (countdown !== null) {
     return (

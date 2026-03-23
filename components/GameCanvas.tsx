@@ -1,46 +1,12 @@
-import React, { useRef, useEffect } from "react";
-import { StyleSheet, View, Pressable } from "react-native";
+import React from "react";
+import { StyleSheet, View } from "react-native";
 import { Canvas } from "@react-three/fiber/native";
 import { Environment } from "@react-three/drei/native";
 import Scene from "./Scene";
-import PitchControl from "./PitchControl";
-import BatDebug from "./BatDebug";
-import BallDebug from "./BallDebug";
-import { useBatStore } from "../stores/useBatStore";
-import { usePitchStore } from "../stores/usePitchStore";
+import HUD from "./HUD/HUD";
+import { colors } from "../constants/designTokens";
 
 export default function GameCanvas() {
-  const countdownTimerRef = useRef<NodeJS.Timeout | null>(null);
-
-  // Bat store
-  const swing = useBatStore((state) => state.swing);
-
-  // Pitch store
-  const countdown = usePitchStore((state) => state.countdown);
-  const setCountdown = usePitchStore((state) => state.setCountdown);
-  const setBallState = usePitchStore((state) => state.setBallState);
-
-  // Countdown timer effect
-  useEffect(() => {
-    if (countdown === null) return;
-
-    if (countdown > 0) {
-      countdownTimerRef.current = setTimeout(() => {
-        setCountdown(countdown - 1);
-      }, 1000);
-    } else {
-      // Countdown finished, start pitching
-      setCountdown(null);
-      setBallState("PITCHING");
-    }
-
-    return () => {
-      if (countdownTimerRef.current) {
-        clearTimeout(countdownTimerRef.current);
-      }
-    };
-  }, [countdown, setCountdown, setBallState]);
-
   return (
     <View style={styles.container}>
       <Canvas
@@ -54,17 +20,8 @@ export default function GameCanvas() {
         <Scene />
       </Canvas>
 
-      {/* Tap area for swinging - covers area above pitch button */}
-      <Pressable style={styles.swingArea} onPress={swing} />
-
-      {/* Pitch Control (Button + Countdown) */}
-      <PitchControl />
-
-      {/* Bat Debug Control */}
-      <BatDebug />
-
-      {/* Ball Debug Control */}
-      <BallDebug />
+      {/* HUD Overlay - UI controls and buttons */}
+      <HUD />
     </View>
   );
 }
@@ -72,14 +29,6 @@ export default function GameCanvas() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#0a0a0a",
-  },
-  swingArea: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 150, // Leave space for pitch button at bottom
-    zIndex: 1,
+    backgroundColor: colors.backgroundPrimary,
   },
 });

@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, TouchableOpacity, Text } from "react-native";
-import { useBatStore, DebugRotation } from "../stores/useBatStore";
-import { colors, spacing, typography, components } from "../constants/designTokens";
+import { useBatStore, DebugRotation } from "../../stores/useBatStore";
+import { colors, spacing, typography, components } from "../../constants/designTokens";
 
 const rotations: Array<Exclude<DebugRotation, null>> = ["REST", "LOAD", "SWING", "FOLLOW"];
 

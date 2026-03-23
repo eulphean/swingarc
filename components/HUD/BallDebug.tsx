@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, TouchableOpacity, Text } from "react-native";
-import { usePitchStore, DebugPosition } from "../stores/usePitchStore";
-import { colors, spacing, typography, components } from "../constants/designTokens";
+import { usePitchStore, DebugPosition } from "../../stores/usePitchStore";
+import { colors, spacing, typography, components } from "../../constants/designTokens";
 
 const positions: Array<Exclude<DebugPosition, null>> = ["START", "END"];
 
