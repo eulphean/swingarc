@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { StyleSheet, View, Pressable } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import GameCanvas from "../../GameCanvas";
@@ -7,6 +7,7 @@ import PitchControl from "../PitchControl";
 import BatDebug from "../BatDebug";
 import BallDebug from "../BallDebug";
 import { useBatStore } from "../../../stores/useBatStore";
+import { useGameLogic } from "../../../stores/useGameLogic";
 
 interface GameScreenProps {
   onGameOver: () => void;
@@ -15,9 +16,17 @@ interface GameScreenProps {
 export default function GameScreen({ onGameOver }: GameScreenProps) {
   const swing = useBatStore((state) => state.swing);
 
-  // TODO: Connect to game state store
-  const strikes = 0;
-  const runs = 14;
+  // Game state from store
+  const strikes = useGameLogic((state) => state.strikes);
+  const runs = useGameLogic((state) => state.runs);
+  const isGameOver = useGameLogic((state) => state.isGameOver);
+
+  // Check for game over
+  useEffect(() => {
+    if (isGameOver) {
+      onGameOver();
+    }
+  }, [isGameOver, onGameOver]);
 
   return (
     <View style={styles.container}>

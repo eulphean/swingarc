@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { useSpring, animated, config } from "@react-spring/three";
 import { usePitchStore } from "../stores/usePitchStore";
 import { useGameRefs } from "../stores/useGameRefs";
+import { useGameLogic } from "../stores/useGameLogic";
 import * as THREE from "three";
 
 const START_POSITION: [number, number, number] = [0, 1, -8];
@@ -65,6 +66,8 @@ export default function Ball({ scale = 1 }: BallProps) {
   const hitPoint = usePitchStore((state) => state.hitPoint);
   const setBallRef = useGameRefs((state) => state.setBallRef);
 
+  const addStrike = useGameLogic((state) => state.addStrike);
+
   const ballRef = useRef<THREE.Mesh>(null);
   const currentEndPositionRef =
     useRef<[number, number, number]>(BASE_END_POSITION);
@@ -100,8 +103,12 @@ export default function Ball({ scale = 1 }: BallProps) {
         position: currentEndPositionRef.current,
         config: { duration: PITCH_DURATION },
         onRest: () => {
-          // Ball passed without hit
-          setBallState("MISS");
+          // Only add a strike if the ball is still in PITCHING state
+          // (not interrupted by a HIT)
+          if (usePitchStore.getState().ballState === "PITCHING") {
+            addStrike();
+            setBallState("MISS");
+          }
         },
       });
     } else if (ballState === "HIT") {

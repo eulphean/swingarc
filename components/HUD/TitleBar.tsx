@@ -18,7 +18,7 @@ export default function TitleBar({ strikes, runs }: TitleBarProps) {
               key={index}
               style={[
                 styles.strikeDiamond,
-                index < strikes && styles.strikeDiamondActive,
+                index >= strikes && styles.strikeDiamondActive,
               ]}
             />
           ))}
@@ -76,13 +76,13 @@ const styles = StyleSheet.create({
   strikeDiamond: {
     width: 16,
     height: 16,
-    backgroundColor: colors.primary,
+    backgroundColor: colors.surfaceContainer,
     borderWidth: 1,
     borderColor: colors.primary,
     transform: [{ rotate: "45deg" }],
   },
   strikeDiamondActive: {
-    backgroundColor: colors.secondary,
+    backgroundColor: colors.primary,
   },
 
   // Right Section

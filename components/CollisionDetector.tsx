@@ -3,6 +3,7 @@ import { useFrame } from "@react-three/fiber";
 import { useGameRefs } from "../stores/useGameRefs";
 import { useBatStore } from "../stores/useBatStore";
 import { usePitchStore } from "../stores/usePitchStore";
+import { useGameLogic } from "../stores/useGameLogic";
 import * as THREE from "three";
 
 /**
@@ -23,6 +24,8 @@ export default function CollisionDetector() {
   const ballState = usePitchStore((state) => state.ballState);
   const setBallState = usePitchStore((state) => state.setBallState);
   const setHitPoint = usePitchStore((state) => state.setHitPoint);
+
+  const addRun = useGameLogic((state) => state.addRun);
 
   const hasContactOccurred = useRef(false);
 
@@ -72,6 +75,9 @@ export default function CollisionDetector() {
       ];
       setHitPoint(contactPoint);
       setBallState("HIT");
+
+      // Add a run to the game score
+      addRun();
 
       // Log for debugging
       console.log("CONTACT! Ball sphere intersects bat bounding box");

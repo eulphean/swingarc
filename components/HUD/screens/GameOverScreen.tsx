@@ -2,17 +2,36 @@ import React from "react";
 import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { colors, spacing, typography } from "../../../constants/designTokens";
+import { useGameLogic } from "../../../stores/useGameLogic";
 
 interface GameOverScreenProps {
   onPlayAgain: () => void;
   onBackToHome: () => void;
 }
 
-export default function GameOverScreen({ onPlayAgain, onBackToHome }: GameOverScreenProps) {
-  // Hardcoded values for now
-  const finalScore = 28;
-  const accuracy = 94;
+export default function GameOverScreen({
+  onPlayAgain,
+  onBackToHome,
+}: GameOverScreenProps) {
+  const resetGame = useGameLogic((state) => state.resetGame);
+  const runs = useGameLogic((state) => state.runs);
+  const pitches = useGameLogic((state) => state.pitches);
+
+  // Calculate accuracy: (hits / pitches) * 100
+  const accuracy = pitches > 0 ? Math.round((runs / pitches) * 100) : 0;
+
+  // Hardcoded for now
   const bestStreak = 4;
+
+  const handlePlayAgain = () => {
+    resetGame();
+    onPlayAgain();
+  };
+
+  const handleBackToHome = () => {
+    resetGame();
+    onBackToHome();
+  };
 
   return (
     <View style={styles.container}>
@@ -21,13 +40,12 @@ export default function GameOverScreen({ onPlayAgain, onBackToHome }: GameOverSc
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.title}>GAME OVER</Text>
-        <Text style={styles.subtitle}>SESSION TERMINATED</Text>
       </View>
 
       {/* Final Score */}
       <View style={styles.scoreSection}>
         <Text style={styles.scoreLabel}>FINAL SCORE</Text>
-        <Text style={styles.scoreValue}>{finalScore}</Text>
+        <Text style={styles.scoreValue}>{runs}</Text>
       </View>
 
       {/* Stats Card */}
@@ -42,25 +60,30 @@ export default function GameOverScreen({ onPlayAgain, onBackToHome }: GameOverSc
         <View style={styles.statDivider} />
         <View style={styles.statItem}>
           <Text style={styles.statLabel}>BEST STREAK</Text>
-          <Text style={[styles.statValue, styles.statValueHighlight]}>{bestStreak}</Text>
+          <Text style={[styles.statValue, styles.statValueHighlight]}>
+            {bestStreak}
+          </Text>
         </View>
       </View>
 
       {/* Action Buttons */}
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.tryAgainButton} onPress={onPlayAgain}>
+        <TouchableOpacity
+          style={styles.tryAgainButton}
+          onPress={handlePlayAgain}
+        >
           <Text style={styles.tryAgainIcon}>↻</Text>
           <Text style={styles.tryAgainText}>TRY AGAIN</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.homeButton} onPress={onBackToHome}>
+        <TouchableOpacity style={styles.homeButton} onPress={handleBackToHome}>
           <Text style={styles.homeIcon}>⌂</Text>
           <Text style={styles.homeText}>HOME</Text>
         </TouchableOpacity>
       </View>
 
       {/* Footer */}
-      <Text style={styles.footer}>♦ SWINGARC PRO // V2.4</Text>
+      <Text style={styles.footer}>SWINGARC V1.0</Text>
     </View>
   );
 }
@@ -71,27 +94,30 @@ const styles = StyleSheet.create({
     backgroundColor: colors.backgroundPrimary,
     alignItems: "center",
     justifyContent: "center",
-    paddingHorizontal: spacing[4],
+    paddingHorizontal: spacing[6],
   },
 
   // Header
   header: {
     alignItems: "center",
     marginBottom: spacing[8],
+    width: "100%",
   },
   title: {
-    fontSize: 56,
+    fontSize: 52,
     fontWeight: "900",
     fontStyle: "italic",
     color: colors.textPrimary,
     letterSpacing: 2,
     marginBottom: spacing[2],
+    textAlign: "center",
   },
   subtitle: {
     ...typography.labelSm,
     color: colors.textTertiary,
     letterSpacing: 3,
     fontSize: 11,
+    textAlign: "center",
   },
 
   // Score Section
@@ -168,8 +194,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: colors.secondary,
-    paddingVertical: spacing[5],
+    backgroundColor: colors.primary,
+    paddingVertical: spacing[4],
     paddingHorizontal: spacing[6],
     borderRadius: 12,
     gap: spacing[3],
@@ -193,7 +219,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surfaceContainerLow,
     borderWidth: 2,
     borderColor: colors.outlineVariant,
-    paddingVertical: spacing[5],
+    paddingVertical: spacing[4],
     paddingHorizontal: spacing[6],
     borderRadius: 12,
     gap: spacing[3],
