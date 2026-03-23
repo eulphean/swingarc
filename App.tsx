@@ -1,6 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, View } from "react-native";
 import GameCanvas from "./components/GameCanvas";
+import { colors } from "./constants/designTokens";
 
 export default function App() {
   return (
@@ -14,6 +15,6 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#0a0a0a",
+    backgroundColor: colors.backgroundPrimary,
   },
 });

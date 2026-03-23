@@ -30,6 +30,11 @@ Three strikes = game over.
   bat.glb            ← baseball bat GLTF model (add later)
 ```
 
+## Design System
+- Design philosophy and specifications: DESIGN.md ("The Kinetic Vault" aesthetic)
+- Implementation (colors, spacing, typography): constants/designTokens.ts
+- Always reference DESIGN.md for principles and designTokens.ts for values when creating/updating UI
+
 ## Game Loop
 1. Ball spawns far away (z = -50) and travels toward camera over ~1.5s
 2. Player taps anywhere → bat swings (rotation animation)

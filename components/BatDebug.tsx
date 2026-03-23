@@ -1,6 +1,7 @@
 import React from "react";
 import { StyleSheet, TouchableOpacity, Text } from "react-native";
 import { useBatStore, DebugRotation } from "../stores/useBatStore";
+import { colors, spacing, typography, components } from "../constants/designTokens";
 
 const rotations: Array<Exclude<DebugRotation, null>> = ["REST", "LOAD", "SWING", "FOLLOW"];
 
@@ -28,19 +29,15 @@ export default function BatDebug() {
 const styles = StyleSheet.create({
   debugButton: {
     position: "absolute",
-    top: 60,
-    right: 20,
-    backgroundColor: "rgba(255, 165, 0, 0.2)",
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 20,
+    top: spacing[12],
+    right: spacing[4],
+    ...components.debugButton,
+    borderColor: colors.secondary,
     borderWidth: 2,
-    borderColor: "rgba(255, 165, 0, 0.5)",
     zIndex: 10,
   },
   debugButtonText: {
-    color: "#ffffff",
-    fontSize: 14,
-    fontWeight: "bold",
+    ...typography.labelSm,
+    color: colors.textPrimary,
   },
 });

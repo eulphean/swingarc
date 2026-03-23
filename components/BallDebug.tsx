@@ -1,6 +1,7 @@
 import React from "react";
 import { StyleSheet, TouchableOpacity, Text } from "react-native";
 import { usePitchStore, DebugPosition } from "../stores/usePitchStore";
+import { colors, spacing, typography, components } from "../constants/designTokens";
 
 const positions: Array<Exclude<DebugPosition, null>> = ["START", "END"];
 
@@ -28,19 +29,15 @@ export default function BallDebug() {
 const styles = StyleSheet.create({
   debugButton: {
     position: "absolute",
-    top: 110,
-    right: 20,
-    backgroundColor: "rgba(0, 165, 255, 0.2)",
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 20,
+    top: spacing[20],
+    right: spacing[4],
+    ...components.debugButton,
+    borderColor: colors.primary,
     borderWidth: 2,
-    borderColor: "rgba(0, 165, 255, 0.5)",
     zIndex: 10,
   },
   debugButtonText: {
-    color: "#ffffff",
-    fontSize: 14,
-    fontWeight: "bold",
+    ...typography.labelSm,
+    color: colors.textPrimary,
   },
 });
