@@ -16,12 +16,10 @@ export default function GameOverScreen({
   const resetGame = useGameLogic((state) => state.resetGame);
   const runs = useGameLogic((state) => state.runs);
   const pitches = useGameLogic((state) => state.pitches);
+  const bestStreak = useGameLogic((state) => state.bestStreak);
 
   // Calculate accuracy: (hits / pitches) * 100
   const accuracy = pitches > 0 ? Math.round((runs / pitches) * 100) : 0;
-
-  // Hardcoded for now
-  const bestStreak = 4;
 
   const handlePlayAgain = () => {
     resetGame();

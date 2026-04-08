@@ -42,10 +42,11 @@ export default function GameScreen({ onGameOver }: GameScreenProps) {
       <Pressable style={styles.swingArea} onPress={swing} />
 
       {/* Debug Controls - Right Side */}
-      <View style={styles.debugContainer}>
+      {/*Hiding debug buttons*/}
+      {/*<View style={styles.debugContainer}>
         <BatDebug />
         <BallDebug />
-      </View>
+      </View>*/}
 
       {/* Pitch Control (Button + Countdown) */}
       <PitchControl />
