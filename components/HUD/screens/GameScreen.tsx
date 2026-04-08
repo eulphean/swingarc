@@ -51,10 +51,10 @@ export default function GameScreen({ onGameOver }: GameScreenProps) {
 
       {/* Debug Controls - Right Side */}
       {/*Hiding debug buttons*/}
-      {/*<View style={styles.debugContainer}>
+      <View style={styles.debugContainer}>
         <BatDebug />
         <BallDebug />
-      </View>*/}
+      </View>
 
       {/* Pitch Control (Button + Countdown) */}
       <PitchControl />

@@ -24,7 +24,7 @@ export default function LoadingScreen({ visible }: LoadingScreenProps) {
             duration: 1200,
             useNativeDriver: true,
           }),
-        ])
+        ]),
       ).start();
     } else {
       // Stop animation and reset
@@ -40,7 +40,7 @@ export default function LoadingScreen({ visible }: LoadingScreenProps) {
   return (
     <View style={styles.container}>
       <Animated.Text style={[styles.text, { opacity: pulseAnim }]}>
-        PREPARE THE SCENE
+        PREPARING SCENE
       </Animated.Text>
     </View>
   );

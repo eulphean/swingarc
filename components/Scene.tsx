@@ -3,6 +3,7 @@ import Ball from "./Ball";
 import Bat from "./Bat";
 import CollisionDetector from "./CollisionDetector";
 import ContactParticles from "./ContactParticles";
+import BoundingBoxHelper from "./BoundingBoxHelper";
 
 export default function Scene() {
   return (
@@ -27,6 +28,9 @@ export default function Scene() {
 
       {/* Contact particles - burst effect at hit point */}
       <ContactParticles />
+
+      {/* Bounding box helper - visual debug for collision boxes */}
+      <BoundingBoxHelper />
     </>
   );
 }

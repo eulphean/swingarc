@@ -135,8 +135,8 @@ export default function Bat() {
       <primitive object={batModel} scale={0.35} />
 
       {/* Invisible marker mesh at barrel for collision detection */}
-      <mesh ref={batBarrelRef} position={[0, 0.65, 0]} visible={false}>
-        <sphereGeometry args={[0.064, 16, 16]} />
+      <mesh ref={batBarrelRef} position={[0, 1.1, 0]} visible={true}>
+        <sphereGeometry args={[0.064, 8, 8]} />
       </mesh>
 
       {/* Barrel tip — tracking point for tip position with trail effect */}
