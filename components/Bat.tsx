@@ -5,6 +5,8 @@ import { useGameRefs } from "../stores/useGameRefs";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import SwingTrail from "./SwingTrail";
+import { useGLTF } from "@react-three/drei/native";
+import { useAssetStore } from "../stores/useAssetStore";
 
 // Keyframe rotations
 const REST_ROTATION = [0.0, 0.3, 0.8];
@@ -26,9 +28,14 @@ export default function Bat() {
   const debugRotation = useBatStore((state) => state.debugRotation);
   const setBatTipRef = useGameRefs((state) => state.setBatTipRef);
   const setBatBarrelRef = useGameRefs((state) => state.setBatBarrelRef);
+  const setBatLoaded = useAssetStore((state) => state.setBatLoaded);
   const batTipRef = useRef<THREE.Mesh>(null);
   const batBarrelRef = useRef<THREE.Mesh>(null);
   const groupRef = useRef<THREE.Group>(null);
+
+  // Load GLTF model
+  const gltf = useGLTF(require("../assets/3D/bat_new.glb")) as any;
+  const batModel = gltf.scene.clone();
 
   const [springs, api] = useSpring(() => ({
     rotation: REST_ROTATION,
@@ -50,6 +57,12 @@ export default function Bat() {
     }
     return () => setBatBarrelRef(null);
   }, [setBatBarrelRef]);
+
+  // Report bat model loaded
+  useEffect(() => {
+    setBatLoaded(true);
+    return () => setBatLoaded(false);
+  }, [setBatLoaded]);
 
   useFrame(() => {
     // Does the bat exist?
@@ -109,10 +122,8 @@ export default function Bat() {
           duration: 1500,
           easing: (t) => {
             // Smooth ease-in-out for seamless reversing
-            return t < 0.5
-              ? 2 * t * t
-              : 1 - Math.pow(-2 * t + 2, 2) / 2;
-          }
+            return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+          },
         },
       });
     }
@@ -120,16 +131,14 @@ export default function Bat() {
 
   return (
     <animated.group position={position} rotation={springs.rotation as any}>
-      {/* Pivot is at Knob [0,0,0], Bat Mesh is offset up */}
-      <mesh ref={batBarrelRef} position={[0, 0.65, 0]}>
-        <cylinderGeometry args={[0.064, 0.032, 1.3, 16]} />
-        <meshStandardMaterial color="red" roughness={0.3} />
+      {/* GLTF Bat Model - pivot is at handle/knob */}
+      <primitive object={batModel} scale={0.35} />
+
+      {/* Invisible marker mesh at barrel for collision detection */}
+      <mesh ref={batBarrelRef} position={[0, 0.65, 0]} visible={false}>
+        <sphereGeometry args={[0.064, 16, 16]} />
       </mesh>
-      {/* Visual Knob at the Pivot Point */}
-      <mesh position={[0, 0, 0]}>
-        <sphereGeometry args={[0.048, 16, 16]} />
-        <meshStandardMaterial color="red" />
-      </mesh>
+
       {/* Barrel tip — tracking point for tip position with trail effect */}
       <SwingTrail
         position={[0, 1.3, 0]}

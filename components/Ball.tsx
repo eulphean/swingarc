@@ -4,6 +4,8 @@ import { usePitchStore } from "../stores/usePitchStore";
 import { useGameRefs } from "../stores/useGameRefs";
 import { useGameLogic } from "../stores/useGameLogic";
 import * as THREE from "three";
+import { useGLTF } from "@react-three/drei/native";
+import { useAssetStore } from "../stores/useAssetStore";
 
 const START_POSITION: [number, number, number] = [0, 1, -8];
 const BASE_END_POSITION: [number, number, number] = [
@@ -65,8 +67,13 @@ export default function Ball({ scale = 1 }: BallProps) {
   const debugPosition = usePitchStore((state) => state.debugPosition);
   const hitPoint = usePitchStore((state) => state.hitPoint);
   const setBallRef = useGameRefs((state) => state.setBallRef);
+  const setBallLoaded = useAssetStore((state) => state.setBallLoaded);
 
   const addStrike = useGameLogic((state) => state.addStrike);
+
+  // Load GLTF model
+  const gltf = useGLTF(require("../assets/3D/baseball.glb")) as any;
+  const ballModel = gltf.scene.clone();
 
   const ballRef = useRef<THREE.Mesh>(null);
   const currentEndPositionRef =
@@ -84,6 +91,12 @@ export default function Ball({ scale = 1 }: BallProps) {
     }
     return () => setBallRef(null);
   }, [setBallRef]);
+
+  // Report ball model loaded
+  useEffect(() => {
+    setBallLoaded(true);
+    return () => setBallLoaded(false);
+  }, [setBallLoaded]);
 
   useEffect(() => {
     // Debug mode - manually set position
@@ -146,9 +159,14 @@ export default function Ball({ scale = 1 }: BallProps) {
   }, [ballState, debugPosition, hitPoint, api, setBallState]);
 
   return (
-    <animated.mesh ref={ballRef} position={springs.position} scale={scale}>
-      <sphereGeometry args={[0.08, 16, 16]} />
-      <meshStandardMaterial color="#ffffff" />
-    </animated.mesh>
+    <animated.group position={springs.position} scale={scale}>
+      {/* GLTF Baseball Model */}
+      <primitive object={ballModel} scale={0.08} />
+
+      {/* Invisible marker mesh for collision detection */}
+      <mesh ref={ballRef} visible={false}>
+        <sphereGeometry args={[0.08, 16, 16]} />
+      </mesh>
+    </animated.group>
   );
 }

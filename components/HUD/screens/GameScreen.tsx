@@ -6,8 +6,10 @@ import TitleBar from "../TitleBar";
 import PitchControl from "../PitchControl";
 import BatDebug from "../BatDebug";
 import BallDebug from "../BallDebug";
+import LoadingScreen from "../LoadingScreen";
 import { useBatStore } from "../../../stores/useBatStore";
 import { useGameLogic } from "../../../stores/useGameLogic";
+import { useAssetStore } from "../../../stores/useAssetStore";
 
 interface GameScreenProps {
   onGameOver: () => void;
@@ -20,6 +22,9 @@ export default function GameScreen({ onGameOver }: GameScreenProps) {
   const strikes = useGameLogic((state) => state.strikes);
   const runs = useGameLogic((state) => state.runs);
   const isGameOver = useGameLogic((state) => state.isGameOver);
+
+  // Asset loading state
+  const allAssetsLoaded = useAssetStore((state) => state.allAssetsLoaded);
 
   // Check for game over
   useEffect(() => {
@@ -34,6 +39,9 @@ export default function GameScreen({ onGameOver }: GameScreenProps) {
 
       {/* 3D Game Canvas */}
       <GameCanvas />
+
+      {/* Loading Screen - shown while GLTF models are loading */}
+      <LoadingScreen visible={!allAssetsLoaded} />
 
       {/* Title Bar */}
       <TitleBar strikes={strikes} runs={runs} />

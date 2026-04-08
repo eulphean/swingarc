@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { StyleSheet, View } from "react-native";
 import { Canvas } from "@react-three/fiber/native";
 import { Environment } from "@react-three/drei/native";
@@ -16,7 +16,9 @@ export default function GameCanvas() {
         gl={{ antialias: false }}
       >
         <Environment preset="park" background blur={0.2} />
-        <Scene />
+        <Suspense fallback={null}>
+          <Scene />
+        </Suspense>
       </Canvas>
     </View>
   );
