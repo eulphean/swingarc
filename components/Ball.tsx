@@ -9,7 +9,7 @@ import { useAssetStore } from "../stores/useAssetStore";
 
 const START_POSITION: [number, number, number] = [0, 1, -8];
 const BASE_END_POSITION: [number, number, number] = [
-  0, -0.5, 5.7799471730269072,
+  -0.183249825157286, 0.05716223458948138, 5.7799471730269072,
 ];
 
 const PITCH_DURATION = 800;
@@ -21,9 +21,10 @@ const MISS_RESET_DURATION = 0;
  */
 function generateRandomEndPosition(): [number, number, number] {
   const xVariation = (Math.random() - 0.5) * 0.5; // Range: -0.1 to 0.1
+  const yVariation = (Math.random() - 0.5) * 0.1; // Range: -0.1 to 0.1
   return [
     BASE_END_POSITION[0] + xVariation,
-    BASE_END_POSITION[1] + xVariation,
+    BASE_END_POSITION[1] + yVariation,
     BASE_END_POSITION[2],
   ];
 }
@@ -39,8 +40,8 @@ function calculateHitDestination(
   const [cx, cy, cz] = contactPoint;
 
   // Add random variation to x and y
-  const xVariation = (Math.random() - 0.5) * 4; // ±2 variation in x
-  const yVariation = (Math.random() - 0.5) * 3; // ±1.5 variation in y
+  const xVariation = (Math.random() - 0.5) * 1; // ±2 variation in x
+  const yVariation = (Math.random() - 0.5) * 1; // ±1.5 variation in y
 
   // Direction vector: rightward, upward, towards stadium
   const direction = {

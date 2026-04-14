@@ -15,7 +15,7 @@ export default function Scene() {
       <directionalLight position={[5, 10, 5]} intensity={1.5} color="#ffffff" />
 
       {/* Grid helper for ground reference */}
-      <gridHelper args={[20, 20, "#444444", "#222222"]} visible={false} />
+      {/*<gridHelper args={[20, 20, "#444444", "#222222"]} visible={false} />*/}
 
       {/* Baseball - uses pitch store internally */}
       <Ball scale={2} />
@@ -30,7 +30,7 @@ export default function Scene() {
       <ContactParticles />
 
       {/* Bounding box helper - visual debug for collision boxes */}
-      <BoundingBoxHelper />
+      {/*<BoundingBoxHelper />*/}
     </>
   );
 }

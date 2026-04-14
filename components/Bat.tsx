@@ -66,9 +66,9 @@ export default function Bat() {
 
   useFrame(() => {
     // Does the bat exist?
-    if (batTipRef.current) {
-      // console.log(batTipRef.current.getWorldPosition(new THREE.Vector3()));
-    }
+    // if (batTipRef.current) {
+    //   console.log(batTipRef.current.getWorldPosition(new THREE.Vector3()));
+    // }
   });
 
   useEffect(() => {
@@ -135,7 +135,12 @@ export default function Bat() {
       <primitive object={batModel} scale={0.35} />
 
       {/* Invisible marker mesh at barrel for collision detection */}
-      <mesh ref={batBarrelRef} position={[0, 1.1, 0]} visible={true}>
+      <mesh
+        ref={batBarrelRef}
+        scale={1.2}
+        position={[0, 1.15, 0]}
+        visible={true}
+      >
         <sphereGeometry args={[0.064, 8, 8]} />
       </mesh>
 

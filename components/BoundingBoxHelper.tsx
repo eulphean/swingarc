@@ -17,13 +17,26 @@ export default function BoundingBoxHelper() {
     if (!ballRef || !batBarrelRef) return;
 
     // Update ball sphere helper
-    if (ballSphereHelperRef.current && ballRef.geometry.boundingSphere) {
-      const ballSphere = new THREE.Sphere();
-      ballSphere.copy(ballRef.geometry.boundingSphere);
-      ballSphere.applyMatrix4(ballRef.matrixWorld);
+    if (ballSphereHelperRef.current) {
+      // Get world position and scale of the ball mesh
+      const worldPosition = new THREE.Vector3();
+      const worldScale = new THREE.Vector3();
+      ballRef.getWorldPosition(worldPosition);
+      ballRef.getWorldScale(worldScale);
 
-      ballSphereHelperRef.current.position.copy(ballSphere.center);
-      ballSphereHelperRef.current.scale.setScalar(ballSphere.radius);
+      // Ensure bounding sphere is computed
+      if (!ballRef.geometry.boundingSphere) {
+        ballRef.geometry.computeBoundingSphere();
+      }
+
+      if (ballRef.geometry.boundingSphere) {
+        // Calculate actual world-space radius
+        const baseRadius = ballRef.geometry.boundingSphere.radius;
+        const worldRadius = baseRadius * Math.max(worldScale.x, worldScale.y, worldScale.z);
+
+        ballSphereHelperRef.current.position.copy(worldPosition);
+        ballSphereHelperRef.current.scale.setScalar(worldRadius);
+      }
     }
 
     // Update bat box helper
