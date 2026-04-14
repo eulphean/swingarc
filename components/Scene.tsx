@@ -4,8 +4,11 @@ import Bat from "./Bat";
 import CollisionDetector from "./CollisionDetector";
 import ContactParticles from "./ContactParticles";
 import BoundingBoxHelper from "./BoundingBoxHelper";
+import { useDebugStore } from "../stores/useDebugStore";
 
 export default function Scene() {
+  const debugMode = useDebugStore((state) => state.debugMode);
+
   return (
     <>
       {/* Ambient lighting - soft overall illumination */}
@@ -30,7 +33,7 @@ export default function Scene() {
       <ContactParticles />
 
       {/* Bounding box helper - visual debug for collision boxes */}
-      {/*<BoundingBoxHelper />*/}
+      {debugMode && <BoundingBoxHelper />}
     </>
   );
 }

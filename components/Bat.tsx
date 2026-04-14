@@ -7,6 +7,7 @@ import * as THREE from "three";
 import SwingTrail from "./SwingTrail";
 import { useGLTF } from "@react-three/drei/native";
 import { useAssetStore } from "../stores/useAssetStore";
+import { useDebugStore } from "../stores/useDebugStore";
 
 // Keyframe rotations
 const REST_ROTATION = [0.0, 0.3, 0.8];
@@ -29,6 +30,7 @@ export default function Bat() {
   const setBatTipRef = useGameRefs((state) => state.setBatTipRef);
   const setBatBarrelRef = useGameRefs((state) => state.setBatBarrelRef);
   const setBatLoaded = useAssetStore((state) => state.setBatLoaded);
+  const debugMode = useDebugStore((state) => state.debugMode);
   const batTipRef = useRef<THREE.Mesh>(null);
   const batBarrelRef = useRef<THREE.Mesh>(null);
   const groupRef = useRef<THREE.Group>(null);
@@ -139,7 +141,7 @@ export default function Bat() {
         ref={batBarrelRef}
         scale={1.2}
         position={[0, 1.15, 0]}
-        visible={true}
+        visible={debugMode}
       >
         <sphereGeometry args={[0.064, 8, 8]} />
       </mesh>

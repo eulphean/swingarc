@@ -10,6 +10,7 @@ import LoadingScreen from "../LoadingScreen";
 import { useBatStore } from "../../../stores/useBatStore";
 import { useGameLogic } from "../../../stores/useGameLogic";
 import { useAssetStore } from "../../../stores/useAssetStore";
+import { useDebugStore } from "../../../stores/useDebugStore";
 
 interface GameScreenProps {
   onGameOver: () => void;
@@ -25,6 +26,9 @@ export default function GameScreen({ onGameOver }: GameScreenProps) {
 
   // Asset loading state
   const allAssetsLoaded = useAssetStore((state) => state.allAssetsLoaded);
+
+  // Debug mode
+  const debugMode = useDebugStore((state) => state.debugMode);
 
   // Check for game over
   useEffect(() => {
@@ -50,11 +54,12 @@ export default function GameScreen({ onGameOver }: GameScreenProps) {
       <Pressable style={styles.swingArea} onPress={swing} />
 
       {/* Debug Controls - Right Side */}
-      {/*Hiding debug buttons*/}
-      <View style={styles.debugContainer}>
-        <BatDebug />
-        <BallDebug />
-      </View>
+      {debugMode && (
+        <View style={styles.debugContainer}>
+          <BatDebug />
+          <BallDebug />
+        </View>
+      )}
 
       {/* Pitch Control (Button + Countdown) */}
       <PitchControl />

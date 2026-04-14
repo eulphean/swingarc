@@ -20,7 +20,7 @@ const MISS_RESET_DURATION = 0;
  * Generate a random end position with x variation between -0.1 and 0.1
  */
 function generateRandomEndPosition(): [number, number, number] {
-  const xVariation = (Math.random() - 0.5) * 0.5; // Range: -0.1 to 0.1
+  const xVariation = (Math.random() - 0.5) * 0.25; // Range: -0.1 to 0.1
   const yVariation = (Math.random() - 0.5) * 0.1; // Range: -0.1 to 0.1
   return [
     BASE_END_POSITION[0] + xVariation,
